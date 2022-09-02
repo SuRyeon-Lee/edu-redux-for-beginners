@@ -27,16 +27,20 @@ const modifier = (state = defaultValue, action) => {
 ```
 * reducer는 data를 modify(수정)하는 function이다.(때문에 modifier라고도 불린다)
 * store에 저장된 데이터는 오직 reducer에서만 바꿀 수 있다.
+* reducer가 리턴하는게 곧 업데이트된 새로운 데이터가 되어 store에 저장된다.
+* 💡if문보다 switch문을 사용하는 것이 좋다.
 
 ## action
 ```js
+const TYPE = "TYPE"
 action = {
-    type: "TYPE"
+    type: TYPE
 }
 ```
 * action은 redux에서 function을 부를 때 쓰는 두번째 parameter 혹은, argument이다.
 * action은 객체이다.
 * action은 reducer와 소통하기 위해 필요한 준비물이다.(dispatch에게 심부름 시킬 때 들려보내는 쪽지)
+* 💡action.type은 변수화하면 오타를 내는 오류를 줄일 수 있어서 좋다.
 
 ## dispatch
 ```js
