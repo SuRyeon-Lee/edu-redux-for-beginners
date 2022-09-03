@@ -4,7 +4,13 @@ Learning Vanilla-Redux and React-Redux
 * 노마드코더님의 (초보자를 위한 리덕스 101)[https://nomadcoders.co/redux-for-beginners] 강의를 들으며 작성한 필기노트입니다.
 <br/><br/><br/><br/>
 
-# ✏️notes
+# ✏️Pure Redux
+
+## getting start
+```
+npm install redux
+```
+* redux를 사용하기 위해 react-redux를 다운받아야한다.
 
 ## store
 ```js
@@ -74,6 +80,102 @@ store.subscribe(onChange)
 
 <br/><br/><br/><br/>
 
+# ✏️React Redux
+
+## getting start
+```
+npm install react-redux
+```
+* react에서 redux를 사용하기 위해 react-redux를 다운받아야한다.
+
+## Provider
+```js
+import { Provider } from "react-redux";
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+* Provider에 store를 연결해줘야 한다.
+
+## Connect: mapStateToProps
+```js
+//TodoList.js
+
+import { connect } from "react-redux";
+
+function TodoList({ todoList }){
+    //...
+}
+
+function mapStateToProps(state, ownProps) {
+  const { todos } = state
+  return { todoList: todos.allIds }
+}
+
+export default connect(mapStateToProps)(TodoList)
+```
+* Pure Redux에서 store.getState + store.subscrube를 React Redux에서 대체하는 방법이다.
+* connect는 mapStateToProps함수를 이용해, store에 저장되어 있는 state를 Component(TodoList)의 props로 연결해준다.
+* mapStateToProps는 통칭이며, 다른이름으로 지정해도 상관없지만, 보통 mapStateToProps로 쓰는게 좋다.
+* mapStateToProps는 첫번째 인자로 state를, 두번째 인자로 ownProps를 받는다.
+* ownProps는 필요할 경우만 받아서 사용한다.
+* mapStateToProps의 인자 state는 store에서 받아온 state이다.
+* ownProps는 연결한 Component(TodoList)의 props객체이다.
+* mapStateToProps에서 새로운 property를 만들 수 있다.
+* mapStateToProps는 object를 리턴해야한다. 리턴된 object가 곧, Component의 새로운 prop으로 추가된다.
+* [공식문서링크](https://react-redux.js.org/using-react-redux/connect-mapstate)
+
+## Connect: mapDispatchToProps
+```js
+//TodoList.js
+
+import { connect } from "react-redux";
+import { actionCreators } from "../store"; //action creators함수를 묶은 하나의 객체를 받아온다고 친다.
+
+function TodoList({ todoList, addToDo }){
+    //...
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return { 
+        addToDo: (text) => dispatch(actionCreators.addToDo(text))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(TodoList)
+//or if you need mapDispatchToProps only.. export default connect(null,mapDispatchToProps)(TodoList)
+```
+```js
+//TodoList.js
+//dispatch를 컴포넌트 안에서 작성하기
+
+function TodoList({ todoList, dispatch }){
+    //... dispatch 직접사용
+}
+//...
+export default connect()(TodoList)
+//or.. export default connect(null,null)(TodoList)
+//or if you need mapStateToProps only.. export default connect(mapStateToProps)(TodoList)
+
+```
+* dispatch는 connect의 두번째 인수로 들어간다.
+* mapDispatchToProps를 설정하지 않아도, connect()만 사용하면 컴포넌트는 dispatch props를 받는다.
+* 하지만 특정된 함수로 dispatch의 기능을 새분하여 사용하면 컴포넌트 안에서 직관적이다. (ex. dispatch -> addToDo)
+* mapDispatchToProps는 통칭이며, 다른이름으로 지정해도 상관없지만, 보통 mapDispatchToProps로 쓰는게 좋다.
+* mapDispatchToPropss는 첫번째 인자로 dispatch 메서드를, 두번째 인자로 ownProps를 받는다.
+* ownProps는 필요할 경우만 받아서 사용한다.
+* mapDispatchToProps의 인자 dispatch는 store에서 받아온 dispatch메서드이다.
+* ownProps는 연결한 Component(TodoList)의 props객체이다.
+* mapDispatchToProps에서 새로운 property로 dispatch함수를 만들 수 있다.
+* mapDispatchToProps는 함수를 담은 object를 리턴한다. 리턴된 object가 곧, Component의 새로운 prop으로 추가된다.
+* [공식문서링크](https://react-redux.js.org/using-react-redux/connect-mapdispatch)
+
+<br/><br/><br/><br/>
+
 # 🤔more
 
-* createStore 대신에 configureStore을 사용하라고 뜨던데 이건뭘까?
+* createStore 대신에 configureStore을 사용하라는 권고문 뜸
