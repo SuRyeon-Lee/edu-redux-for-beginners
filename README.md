@@ -179,3 +179,4 @@ export default connect()(TodoList)
 # 🤔more
 
 * createStore 대신에 configureStore을 사용하라는 권고문 뜸
+* react-router-dom의 useParams()에 대해서 알아보기
