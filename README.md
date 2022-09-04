@@ -1,7 +1,7 @@
 # 🔥edu-redux-for-beginners
 Learning Vanilla-Redux and React-Redux
 <br/><br/>
-* 노마드코더님의 (초보자를 위한 리덕스 101)[https://nomadcoders.co/redux-for-beginners] 강의를 들으며 작성한 필기노트입니다.
+* 노마드코더님의 [초보자를 위한 리덕스 101](https://nomadcoders.co/redux-for-beginners) 강의를 들으며 작성한 필기노트입니다.
 <br/><br/><br/><br/>
 
 # ✏️Pure Redux
@@ -206,6 +206,8 @@ export default connect(null,mapDispatchToProps)(ToDo);
 * `const actionCreator = createAction("타입명");` 로 action creator를 간편하게 만든다.
 * action.type을 switch문에서 변수화해서 case 비교할 것 없이, `actionCreator.type`을 사용하면 된다. 
 * `actionCreator("전달할 내용")` 를 전달할 때, action은 `{type: '타입명', payload: '전달할 내용'}`으로 무조건 payload라는 키값에 할당된다.
+* [공식문서링크](https://redux-toolkit.js.org/usage/usage-guide#defining-action-creators-with-createaction)
+
 
 ## createReducer
 ```js
@@ -228,6 +230,7 @@ const store = createStore(reducer)
 * createReducer를 사용하면 state를 mutate(변형)할 수 있다. (immer라는 걸 사용해서 알아서 잘 처리해줌)
 * 🛑**mutate할 때에는 return하지 않는다.** (ex. push 등)
 * 🛑**mutate를 하지 않을 때(새로 만들어버릴 때)는 return한다.** (ex. filter 등)
+* [공식문서링크](https://redux-toolkit.js.org/usage/usage-guide#simplifying-reducers-with-createreducer)
 
 ## configureStore
 ```js
@@ -240,6 +243,34 @@ const store = configureStore({reducer}) //중괄호 중요
 * configureStore은 redux toolkit을 사용하지 않아도 쓸 수 있다.
 * configureStore을 사용하고 [ReduxDevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=ko)를 크롬 익스텐션에 추가하면 자동으로 해당 reducer에서 발생하는 일들을 추적가능하도록 해준다.
 * configureStore설정 + ReduxDevTools 사용 = 모든 state의 변화들을 추적가능하고, dispatcher로 익스텐션내에서 dispatch할 수도 있다.
+* [공식문서링크](https://redux-toolkit.js.org/usage/usage-guide#simplifying-store-setup-with-configurestore)
+
+## 🌟createSlice
+```js
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+const toDos = createSlice({
+    name: 'toDosReducer',
+    initialState: [],
+    reducers: {
+        add:(state,action) => {
+            state.push({text: action.payload, id: Date.now()})
+        },
+        remove: (state,action) => state.filter(toDo => toDo.id !== action.payload)
+    }
+})
+
+export const { //dispatch하는 곳에서 import하기
+    add,
+    remove
+} = toDos.actions
+
+export default configureStore({reducer: toDos.reducer})
+```
+* createSlice는 createAction과 createReducer를 한번에 처리할 수 있도록 해준다.
+* 코드가 매우 짧아지고 보기쉽다.
+* 캡슐화 시킬 수 있다.
+* [공식문서링크](https://redux-toolkit.js.org/usage/usage-guide#simplifying-slices-with-createslice)
 
 <br/><br/><br/><br/>
 
